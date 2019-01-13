@@ -27,6 +27,16 @@ export default class App extends Component {
     }
 
     render() {
+        const primaryLinks = [
+            {
+                text: 'User Info', active: true, href: '#', onClick: this.activateLink.bind(this)
+            }
+        ];
+        if (this.state.user.admin) {
+            primaryLinks.push({
+                text: 'User Management', active: false, href: '#', onClick: this.activateLink.bind(this)
+            });
+        }
         return <div style={{position: 'relative', height: '1000px'}}>
             <Siteframe {...{
                 headerProps: {
@@ -35,9 +45,9 @@ export default class App extends Component {
                     productName: 'Simple UI'
                 },
                 sidebarProps: {
-                    primaryLinks: [{text: 'User Info', active: true}],
+                    primaryLinks: primaryLinks,
                     secondaryLinks: [{text: 'Logout', href: '/logout'}],
-                    renderLink: ({text, href}) => <a href={href}>{text}</a>
+                    renderLink: ({text, href, onClick}) => <a href={href} onClick={onClick}>{text}</a>
                 },
             }}>
                 <div className="bg-neutral-8 pal" style={{padding: '30px 30px 0px', height: '100%', overflow: 'auto'}}>
@@ -47,5 +57,12 @@ export default class App extends Component {
                 </div>
             </Siteframe>
         </div>;
+    }
+
+    activateLink(event) {
+        const li = event.target.parentElement.parentElement;
+        li.parentNode.childNodes.forEach(n => {
+            n.className = n === li ? 'pui-sidebar-li-active' : '';
+        });
     }
 }
