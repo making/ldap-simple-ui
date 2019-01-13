@@ -10,16 +10,19 @@ public class UserInfo {
 	private final String lastName;
 	private final String email;
 	private final String dn;
+	private final boolean admin;
 
 	public UserInfo(@JsonProperty("id") String id,
 			@JsonProperty("firstName") String firstName,
 			@JsonProperty("lastName") String lastName,
-			@JsonProperty("email") String email, @JsonProperty("dn") String dn) {
+			@JsonProperty("email") String email, @JsonProperty("dn") String dn,
+			@JsonProperty("admin") Boolean admin) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.dn = dn;
+		this.admin = admin != null ? admin : false;
 	}
 
 	@Override
@@ -48,11 +51,22 @@ public class UserInfo {
 		return dn;
 	}
 
+	public boolean isAdmin() {
+		return admin;
+	}
+
 	public UserInfo withId(String id) {
-		return new UserInfo(id, this.firstName, this.lastName, this.email, this.dn);
+		return new UserInfo(id, this.firstName, this.lastName, this.email, this.dn,
+				this.admin);
 	}
 
 	public UserInfo withDn(String dn) {
-		return new UserInfo(this.id, this.firstName, this.lastName, this.email, dn);
+		return new UserInfo(this.id, this.firstName, this.lastName, this.email, dn,
+				this.admin);
+	}
+
+	public UserInfo withAdmin(boolean admin) {
+		return new UserInfo(this.id, this.firstName, this.lastName, this.email, this.dn,
+				admin);
 	}
 }

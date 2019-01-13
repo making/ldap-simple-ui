@@ -31,7 +31,7 @@ public class UserInfoMapper implements AttributesMapper<UserInfo> {
 		return new UserInfo(this.props.id(attributes).orElse(null),
 				this.props.firstName(attributes).orElse(null),
 				this.props.lastName(attributes).orElse(null),
-				this.props.email(attributes).orElse(null), null);
+				this.props.email(attributes).orElse(null), null, false);
 	}
 
 	public ModificationItem[] toModificationItems(UserInfo current, UserInfo updated) {

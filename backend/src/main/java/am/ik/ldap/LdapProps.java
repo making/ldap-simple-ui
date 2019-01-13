@@ -9,6 +9,7 @@ import javax.naming.directory.Attributes;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.ldap.core.DistinguishedName;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.ldap.LdapUtils;
 import org.springframework.stereotype.Component;
 
@@ -77,6 +78,12 @@ public class LdapProps {
 
 	public void setAdminRole(String adminRole) {
 		this.adminRole = adminRole;
+	}
+
+	public boolean isAdmin(Authentication authentication) {
+		return authentication.getAuthorities().stream()
+				.anyMatch(authority -> ("ROLE_" + this.adminRole)
+						.equalsIgnoreCase(authority.getAuthority()));
 	}
 
 	public String dn(String id) {
