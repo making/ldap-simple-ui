@@ -1,0 +1,9 @@
+applications:
+- name: ldap-simple-ui
+  buildpacks:
+  - https://github.com/cloudfoundry/java-buildpack
+  path: ./backend/target/backend-0.0.1-SNAPSHOT.jar
+  env:
+    JAVA_OPTS: '-XX:ReservedCodeCacheSize=32M -Xss512k -XX:+PrintCodeCache'
+    JBP_CONFIG_OPEN_JDK_JRE: '[memory_calculator: {stack_threads: 24}]'
+  memory: 384m

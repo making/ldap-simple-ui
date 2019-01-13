@@ -26,3 +26,6 @@
 
 application-default.properties
 target
+
+*.cache
+*.droplet
