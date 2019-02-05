@@ -13,11 +13,9 @@ uaac client add ldap-simple-ui \
   --access_token_validity 604800 \
   --refresh_token_validity 1209600 \
   --authorized_grant_types authorization_code,refresh_token \
-  --redirect-uri https://<hostname of LDAP Simple UI> \
+  --redirect_uri https://<hostname of LDAP Simple UI> \
   --scope openid,email,profile,roles \
-  --secret ......... \
-  --show_on_homepage true \
-  --app_launch_url https://<hostname of LDAP Simple UI>
+  --secret ......... 
 ```
 
 ## Deploy to Kubernetes
