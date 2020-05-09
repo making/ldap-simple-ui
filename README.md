@@ -99,12 +99,22 @@ spec:
           value: "20"
         - name: JAVA_OPTS
           value: "-XX:ReservedCodeCacheSize=32M -Xss512k -Duser.timezone=Asia/Tokyo -Dfile.encoding=UTF-8"
-        - name: SPRING_APPLICATION_NAME
-          value: "${NAMESPACE}:ldap-simple-ui"
-        - name: NAMESPACE
+        - name: LOGGING_EXCEPTION_CONVERSION_WORD
+          value: "\t%replace(%replace(%xEx){'\n','@n@'}){'\t','    '}%nopex"
+        - name: LOGGING_PATTERN_CONSOLE
+          value: "%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${logging.pattern.level:%5p}) %clr(${PID: }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %replace(%m){'\n','@n@'}${logging.exception-conversion-word:%wEx}%n"
+        - name: SPRING_ZIPKIN_SERVICE_NAME
+          value: "${INFO_K8S_NAMESPACE}:ldap-simple-ui"
+        - name: INFO_K8S_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: INFO_K8S_POD
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: INFO_K8S_APP
+          value: "${spring.application.name}"
         - name: UAA_URL
           valueFrom:
             secretKeyRef:
