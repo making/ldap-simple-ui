@@ -43,7 +43,7 @@ kubectl create -n ldap secret generic ldap-secret \
   
 kubectl apply -f ldap-secret.yml
 
-cat <<EOF > ldap-simple-ui.yml
+cat <<'EOF' > ldap-simple-ui.yml
 kind: Service
 apiVersion: v1
 metadata:
@@ -59,7 +59,7 @@ spec:
     port: 8080
   type: NodePort
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ldap-simple-ui
@@ -68,6 +68,9 @@ metadata:
     app: ldap-simple-ui
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: ldap-simple-ui
   revisionHistoryLimit: 4
   strategy:
     rollingUpdate:
@@ -92,6 +95,10 @@ spec:
           value: "8080"
         - name: SPRING_PROFILES_ACTIVE
           value: kubernetes
+        - name: BPL_JVM_THREAD_COUNT
+          value: "20"
+        - name: JAVA_OPTS
+          value: "-XX:ReservedCodeCacheSize=32M -Xss512k -Duser.timezone=Asia/Tokyo -Dfile.encoding=UTF-8"
         - name: SPRING_APPLICATION_NAME
           value: "${NAMESPACE}:ldap-simple-ui"
         - name: NAMESPACE
@@ -129,15 +136,13 @@ spec:
               name: ldap-secret
               key: uaa-client-secret
         volumeMounts:
-        - name: tmp
-          mountPath: /home/vcap/tmp
         - name: ldap-ca
           mountPath: /etc/ssl/certs
         resources:
           limits:
-            memory: "386Mi"
+            memory: "256Mi"
           requests:
-            memory: "386Mi"
+            memory: "256Mi"
         readinessProbe:
           httpGet:
             path: /actuator/health
@@ -148,15 +153,13 @@ spec:
           failureThreshold: 3
         livenessProbe:
           httpGet:
-            path: /actuator/health
+            path: /actuator/info
             port: 8080
           initialDelaySeconds: 180
           timeoutSeconds: 3
           periodSeconds: 10
           failureThreshold: 3
       volumes:
-      - name: tmp
-        emptyDir: {}
       - name: ldap-ca
         secret:
           secretName: ldap-secret

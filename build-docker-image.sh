@@ -1,5 +1,9 @@
 #!/bin/bash
-
-cf local stage ldap-simple-ui -p ./backend/target/backend-0.0.1-SNAPSHOT.jar
-cf local export ldap-simple-ui -r making/ldap-simple-ui
-docker push making/ldap-simple-ui
+set -e
+./mvnw clean package -DskipTests
+# VERSION=$(grep '<version>' pom.xml | head -n 2 | tail -n 1 | sed -e 's|<version>||g' -e 's|</version>||g' -e 's| ||g')
+VERSION=latest
+pack build making/ldap-simple-ui:${VERSION} \
+  -p backend/target/backend-*.jar  \
+  --builder gcr.io/paketo-buildpacks/builder:base
+docker push making/ldap-simple-ui:${VERSION}
